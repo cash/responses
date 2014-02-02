@@ -78,6 +78,27 @@ def test_match_querystring_error():
     assert_reset()
 
 
+def test_match_querystring_on_full_string():
+    @responses.activate
+    def run():
+        responses.add(
+            responses.GET,
+            'http://example.com?test=1',
+            match_querystring=True,
+            body=b'substring')
+        responses.add(
+            responses.GET,
+            'http://example.com?test=1&foo=bar',
+            match_querystring=True,
+            body=b'full')
+
+        resp = requests.get('http://example.com?test=1&foo=bar')
+        assert_response(resp, 'full')
+
+    run()
+    assert_reset()
+
+
 def test_accept_string_body():
     @responses.activate
     def run():

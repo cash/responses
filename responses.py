@@ -124,7 +124,7 @@ class RequestsMock(object):
             # TODO(dcramer): we could simplify this by compiling a single
             # regexp on register
             if match['match_querystring']:
-                if not re.match(re.escape(match['url']), url):
+                if not re.match(re.escape(match['url']) + '$', url):
                     continue
             else:
                 if match['url'] != url_without_qs:
