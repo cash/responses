@@ -34,6 +34,19 @@ def test_response():
     assert_reset()
 
 
+def test_response_no_partial_match():
+    @responses.activate
+    def run():
+        responses.add(responses.GET, 'http://example.com', body=b'partial')
+        responses.add(responses.GET, 'http://example.com/test/', body=b'full')
+
+        resp = requests.get('http://example.com/test/')
+        assert_response(resp, 'full')
+
+    run()
+    assert_reset()
+
+
 def test_connection_error():
     @responses.activate
     def run():
